@@ -6,9 +6,8 @@ import { Input } from './components/Input';
 import { Header, Content } from './components/Layout';
 import { theme } from './theme';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import {app} from '../firebaseConfig'
 
-const Join = () => {
+const Join = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordForCheck, setPasswordForCheck] = useState('');
@@ -43,18 +42,31 @@ const Join = () => {
         }
         if (canPassValidation()) {
             console.log("회원가입 가능");
-            registerUserOnDB(user);
+            //registerUserOnDB(user);
+            navigation.navigate('LOGIN');
         } else {
             console.log("회원가입 불가능");
         }
     }
 
     function canPassValidation() {
+        return true;
+
         // Check email(ex. abc@abc.com)
+        console.log("ejeifeijfe");
+        const emailPattern = new RegExp(`[^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$]`);
+        if (!emailPattern.test(email)) return false;
+        // Check password
         if (password != passwordForCheck) return false;
         // Check name(Korean only)
+        const koreanPattern = new RegExp(`[가-힣]`);
+        if (!koreanPattern.test(name)) return false;
         // Check phone(no -)
+        const phonePattern = new RegExp(`[0-9]`);
+        if (!phonePattern.test(phone)) return false;
         // Check student id(8 digits)
+        const studentPattern = new RegExp(`[0-9]`);
+        if (studentId.length != 8 || !studentPattern.test(studentId)) return false;
         return true;
     }
 
